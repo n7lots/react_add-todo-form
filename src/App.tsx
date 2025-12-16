@@ -6,15 +6,27 @@ import { Todo } from './types/Todo';
 import { TodoList } from './components/TodoList';
 import { TodoInfo } from './components/TodoInfo';
 
+function preparedTodos(todos: Todo[], users: typeof usersFromServer): Todo[] {
+  return todos.map(todo => ({
+    ...todo,
+    user: users.find(user => user.id === todo.userId),
+  }));
+}
+
 export const App = () => {
-  const [todos, setTodos] = useState<Todo[]>(todosFromServer);
+  const [todos, setTodos] = useState<Todo[]>(
+    preparedTodos(todosFromServer, usersFromServer),
+  );
 
   const addNewTodo = (title: string, userId: number) => {
+    const user = usersFromServer.find(u => u.id === userId);
+
     const newTodo: Todo = {
       id: Math.max(...todos.map(todo => todo.id)) + 1,
       title: title,
       userId: userId,
       completed: false,
+      user: user,
     };
 
     setTodos(currentTodos => [...currentTodos, newTodo]);
@@ -24,7 +36,7 @@ export const App = () => {
     <div className="App">
       <h1>Add todo form</h1>
       <TodoInfo addTodo={addNewTodo} users={usersFromServer} />
-      <TodoList todos={todos} users={usersFromServer} />
+      <TodoList todos={todos} />
     </div>
   );
 };
