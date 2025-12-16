@@ -19,10 +19,10 @@ export const App = () => {
   );
 
   const addNewTodo = (title: string, userId: number) => {
-    const user = usersFromServer.find(u => u.id === userId);
+    const user = usersFromServer.find(ourUser => ourUser.id === userId);
 
     const newTodo: Todo = {
-      id: Math.max(...todos.map(todo => todo.id)) + 1,
+      id: todos.length > 0 ? Math.max(...todos.map(todo => todo.id)) + 1 : 1,
       title: title,
       userId: userId,
       completed: false,
